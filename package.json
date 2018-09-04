@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server",
-    "build": "webpack",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "webpack-dev-server --mode development --open --content-base ./dist",
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
@@ -30,9 +29,11 @@
     "eslint": "^5.5.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
+    "html-webpack-plugin": "^3.2.0",
     "nodemon": "^1.18.4",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "style-loader": "^0.23.0",
     "webpack": "^4.17.2",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.7"
