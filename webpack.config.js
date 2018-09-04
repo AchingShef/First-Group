@@ -1,5 +1,6 @@
 const path = require("path"),
-    HtmlWebPackPlugin = require("html-webpack-plugin");
+    HtmlWebPackPlugin = require("html-webpack-plugin"),
+    webpack = require('webpack');
  
 module.exports = {
     entry: "./src/client/app.jsx",
@@ -10,17 +11,27 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.jsx?$/,
-            exclude: /(node_modules)/,
+            test: /\.(js|jsx)$/,
+            exclude: /node_modules/,
             loader: "babel-loader",
             options: {
                 presets: ["@babel/preset-env","@babel/preset-react"]
             }
+        }, {
+            test: /\.html$/,
+            use: [{
+                loader: "html-loader"
+            }]
         }]
     },
+    devServer: {
+        contentBase: './dist',
+        hot: true
+    },
     plugins: [new HtmlWebPackPlugin({
-        filename: 'index.html',
-        template: 'index.html',
-        inject: true
-    })]
-}
+            template: "./src/client/index.html",
+            filename: "./index.html"
+        }),
+        new webpack.HotModuleReplacementPlugin()
+    ]
+};

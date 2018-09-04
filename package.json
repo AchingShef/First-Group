@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --mode development --open --content-base ./dist",
+    "dev": "webpack-dev-server --config ./webpack.config.js --mode development",
     "build": "webpack --mode production"
   },
   "repository": {
@@ -29,6 +29,7 @@
     "eslint": "^5.5.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
+    "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "nodemon": "^1.18.4",
     "react": "^16.4.2",

@@ -3,7 +3,7 @@ var React = require('react');
 var ItemsList = require('./components/ItemsList.jsx');
  
 const propsValues = {
-    title: "Список смаыыртфоновыс",
+    title: "Список смартфонов",
     items: [
         "HTC U Ultra", 
         "iPhone 7", 
