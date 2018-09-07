@@ -1,7 +1,17 @@
 const express = require("express"),
     app = express(),
     request = require("request"),
-    xml2js = require("xml2js");
+    xml2js = require("xml2js"),
+    sqlite3 = require('sqlite3').verbose(),
+    db = new sqlite3.Database('./db.sql');
+
+db.run(`CREATE TABLE IF NOT EXISTS data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    text TEXT,
+    ip TEXT,
+    geodata TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);`);
 
 function s4() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -98,7 +108,8 @@ function getGeoData(ip) {
 }
 
 function writeInDB(geoData, text) {
-    debugger;
+    db.run(`INSERT INTO data (text, ip, geodata)
+        VALUES (?, ?, ?)`, text, geoData.ip, JSON.stringify(geoData));
 }
 
 app.use(express.static("dist"));
@@ -121,3 +132,7 @@ app.get("/api/getTips", (req, res) => {
 });
 
 app.listen(8080,  "0.0.0.0");
+
+process.on("exit", () => {
+    db.close();
+});

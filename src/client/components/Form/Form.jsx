@@ -15,11 +15,11 @@ export default class Form extends React.Component {
             <div>
                 <form>
                     <label htmlFor="main">Input Data</label>
-                    <input type="text" id="main" value={this.state.value} className="main" placeholder="Input Data..." onChange={this.handleChange}></input>
+                    <input type="text" id="main" value={ this.state.value } className="main" placeholder="Input Data..." onChange={ this.handleChange }></input>
                 </form>
                 <ul>
                     {
-                        this.state.tips.map(item => (<Tip key={item.id} value={item.value} onClick={ this.onLiClick }/>))
+                        this.state.tips.map(item => (<Tip key={ item.id } value={ item.value } onClick={ this.onLiClick }/>))
                     }
                 </ul>
             </div>
@@ -33,18 +33,19 @@ export default class Form extends React.Component {
             tips: []
         });
 
+        if (this.idx) {
+            clearTimeout(this.idx);
+
+            this.idx = null;
+        }
+
         if (value.length > 2) {
-            if (this.idx) {
-                clearTimeout(this.idx);
-
-                this.idx = null;
-            }
-
             this.idx = setTimeout(() => {
                 fetch(`/api/getTips?text=${value}`)
                     .then(res => res.json())
-                    .then(tips => this.setState({tips: tips.tips})
-                );
+                    .then(tips => {
+                        return this.setState({tips: tips})
+                    });
             }, 1000);
         }
 
