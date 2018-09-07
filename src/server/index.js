@@ -68,7 +68,7 @@ function getAddr(req) {
         addr = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     
         if (addr.includes("127.0.0.1")) {
-            addr = ip.address();
+            addr = "185.202.212.51";
         }
 
         return addr;
@@ -84,4 +84,4 @@ app.get("/api/getTips", (req, res) => {
     });   
 });
 
-app.listen(8080, () => console.log("Listening on port 8080"));
+app.listen(8080,  "0.0.0.0");

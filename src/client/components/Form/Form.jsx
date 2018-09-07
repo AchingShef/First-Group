@@ -1,4 +1,5 @@
 import React from "react";
+import Tip from "../Tip/Tip.jsx";
 import "./style.css";
 
 export default class Form extends React.Component {
@@ -18,9 +19,7 @@ export default class Form extends React.Component {
                 </form>
                 <ul>
                     {
-                        this.state.tips.forEach((item) => {
-                            debugger;
-                        })
+                        this.state.tips.map(item => (<Tip key={item.id} value={item.value} onClick={ this.onLiClick }/>))
                     }
                 </ul>
             </div>
@@ -29,6 +28,10 @@ export default class Form extends React.Component {
 
     handleChange = (e) => {
         let value = e.target.value;
+
+        this.setState({
+            tips: []
+        });
 
         if (value.length > 2) {
             if (this.idx) {
@@ -47,6 +50,13 @@ export default class Form extends React.Component {
 
         this.setState({
             value: value
+        });
+    }
+
+    onLiClick = (value) => {
+        this.setState({
+            value: value,
+            tips: []
         });
     }
 };
