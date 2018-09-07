@@ -1,8 +1,5 @@
 const express = require("express"),
-    os = require("os"),
     app = express(),
-    url = require("url"),
-    ip = require("ip"),
     request = require("request"),
     xml2js = require("xml2js");
 
@@ -64,24 +61,63 @@ function getTips(text) {
 }
 
 function getAddr(req) {
-    let url_parts = url.parse(req.url, true),
-        addr = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    
-        if (addr.includes("127.0.0.1")) {
-            addr = "185.202.212.51";
+    const promise = new Promise((resolve, reject) => {
+        const addr = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+        if (addr !== "127.0.0.1") {
+            resolve(addr);
         }
 
-        return addr;
+        request.get({
+            url: "https://api.ipify.org",
+            qs: {
+                "format": "json"
+            }
+        }, (err, response, body) => {
+            resolve(JSON.parse(body));
+        });
+    });
+
+    return promise;
+}
+
+function getGeoData(ip) {
+    const promise = new Promise((resolve, reject) => {
+        request.get({
+            url: `http://api.ipstack.com/${ip}`,
+            qs: {
+                "access_key": "9d2264448f073a96db2283c3f3b6a1b2",
+                "format": 1
+            }
+        }, (err, response, body) => {
+            resolve(JSON.parse(body));
+        });
+    });
+
+    return promise;
+}
+
+function writeInDB(geoData, text) {
+    debugger;
 }
 
 app.use(express.static("dist"));
+
 app.get("/api/getTips", (req, res) => {
-    let adr = getAddr(req),
-        text = req.query.text;
+    const p1 = getAddr(req),
+        p2 = getTips(req.query.text);
+    let tips;
     
-    getTips(text).then((tips) => {
-        res.send(tips);
-    });   
+    Promise.all([p1, p2])
+        .then(values => {
+            tips = values[1].tips;
+
+            return getGeoData(values[0].ip);
+        })
+        .then (geoData => {
+            writeInDB(geoData, req.query.text);
+            res.send(tips);
+        });
 });
 
 app.listen(8080,  "0.0.0.0");
