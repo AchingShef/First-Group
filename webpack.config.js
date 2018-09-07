@@ -14,18 +14,17 @@ module.exports = {
         rules: [{
             test: /\.(js|jsx)$/,
             exclude: /node_modules/,
-            loader: "babel-loader",
-            options: {
-                presets: ["@babel/preset-env","@babel/preset-react"]
-            }
-        }, 
-        {
+            loader: "babel-loader"
+        }, {
             test: /\.html$/,
             use: [{
                 loader: "html-loader"
             }]
-        }
-    ]
+        }, {
+            
+            test: /\.css$/,
+            use: [ "style-loader", "css-loader"]
+        }]
     },
     devServer: {
         port: 3000,
@@ -33,7 +32,7 @@ module.exports = {
         proxy: {
           '/api': 'http://localhost:8080'
         }
-      },
+    },
     plugins: [new HtmlWebPackPlugin({
             template: "./src/client/index.html",
             filename: "./index.html"
